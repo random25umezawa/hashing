@@ -3,7 +3,8 @@ import java.util.*;
 class Main {
 	static List<Integer> primes = new ArrayList<>();
 
-	static int[] squares = new int[]{
+	//constants
+	static final int[] SQUARES = new int[]{
 		0x6a09e667,
 		0xbb67ae85,
 		0x3c6ef372,
@@ -13,7 +14,7 @@ class Main {
 		0x1f83d9ab,
 		0x5be0cd19
 	};
-	static int[] cubes = new int[]{
+	static final int[] CUBES = new int[]{
 		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 		0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
 		0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -25,6 +26,30 @@ class Main {
 	};
 
 	public static void main(String[] args) {
+		//calc squares,cubes
+		//hard coding because of fixed value
+		/*
+		{
+			//calc primes
+			{
+				int i = 2;
+				while(prime.size()<64) {
+					boolean flag = false;
+					for(int prime : primes) flag |= i%prime==0;
+					if(!flag) primes.add(i);
+				}
+			}
+			System.out.println(primes);
+			for(int i = 0; i < 8; i++) {
+					System.out.println(Integer.toHexString(fractional(Math.sqrt(primes.get(i)))));
+			}
+			System.out.println();
+			for(int i = 0; i < 64; i++) {
+					System.out.println(Integer.toHexString(fractional(Math.cbrt(primes.get(i)))));
+			}
+		}
+		*/
+
 		List<Integer> arr = new ArrayList<Integer>(
 			Arrays.asList(
 				0x00001111,
@@ -51,6 +76,8 @@ class Main {
 	}
 
 	//arr: 32bit arr,	len: bit length
+	//padding bit arr to number mod 512 = 0
+	//|bitarr+'1'+'0'*k| mod 512 = 448, add more 64bit |bitarr|
 	static void padding(List<Integer> arr, long longLen) {
 		int len = (int)(longLen&0xffffffffL);
 		int bit1Index = len/32;
@@ -65,4 +92,14 @@ class Main {
 		arr.add((int)(longLen&0xffffffff00000000L));
 		arr.add((int)(longLen&0x00000000ffffffffL));
 	}
+
+	//get first 32bit of fractional part
+	//convert d to a number not exceeding 2 (for adjustment of the advance in binary number?)
+	static int fractional(double d) {
+		int n = (int)d;
+		d -= (n-1);
+		long bits = Double.doubleToLongBits(d);
+		return (int)((bits&0x000fffffffffffffL)>>20);
+	}
+
 }
