@@ -72,7 +72,7 @@ class Main {
 
 		padding(arr,arr.size()*32);
 
-		System.out.println(arr);
+		System.out.println(arr+" "+arr.size());
 	}
 
 	//arr: 32bit arr,	len: bit length
@@ -86,7 +86,7 @@ class Main {
 		arr.set(bit1Index,arr.get(bit1Index)|(1<<bit1Pos));
 		int padLength = 448-(len+1);
 		padLength = (padLength+512)%512;
-		for(int i = 0; i < (padLength+32-1)/32; i++) {
+		for(int i = 0; i < (padLength-1)/32; i++) {
 			arr.add(0);
 		}
 		arr.add((int)(longLen&0xffffffff00000000L));
