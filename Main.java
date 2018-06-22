@@ -72,7 +72,11 @@ class Main {
 
 		padding(arr,arr.size()*32);
 
-		System.out.println(arr+" "+arr.size());
+		//System.out.println(arr+" "+arr.size());
+
+		String hashed = hash(arr);
+
+		System.out.println(hashed);
 	}
 
 	//arr: 32bit arr,	len: bit length
@@ -100,6 +104,73 @@ class Main {
 		d -= (n-1);
 		long bits = Double.doubleToLongBits(d);
 		return (int)((bits&0x000fffffffffffffL)>>20);
+	}
+
+	static String hash(List<Integer> arr) {
+		int[] h = SQUARES.clone();
+		for(int i = 0; i < arr.size()/16; i++) {
+			int[] block = new int[64];
+			for(int j = 0; j < 16; j++) {
+				block[j] = arr.get(i*16+j);
+			}
+			expand(block);
+			rotate(block,h);
+		}
+		char[] out = new char[32];
+		for(int i = 0; i < 8; i++) {
+			for(int j = 3; j >= 0; j--) {
+				out[i*4+j] = (char)((h[i]&(0xff<<(8*j)))>>>(8*j));
+			}
+		}
+		return new String(out);
+	}
+
+	static void expand(int[] w) {
+		for(int i = 16; i < 63; i++) {
+			int s0 = rightRotate(w[i-15],7) ^ rightRotate(w[i-15],18) ^ rightRotate(w[i-15],3);
+			int s1 = rightRotate(w[i-2],17) ^ rightRotate(w[i-2],19) ^ rightRotate(w[i-2],10);
+			w[i] = w[i-16] + s0 + w[i-7] + s1;
+		}
+	}
+
+	static void rotate(int[] w, int[] k) {
+		int a = k[0];
+		int b = k[1];
+		int c = k[2];
+		int d = k[3];
+		int e = k[4];
+		int f = k[5];
+		int g = k[6];
+		int h = k[7];
+		for(int i = 0; i < 64; i++) {
+			int S1 = rightRotate(e,6) ^ rightRotate(e,11) ^ rightRotate(e,25);
+			int ch = (e&f) ^ ((~e)&g);
+			int temp1 = h + S1 + ch + CUBES[i] + w[i];
+			int S0 = rightRotate(a,2) ^ rightRotate(a,13) ^ rightRotate(a,22);
+			int maj = (a&b) ^ (a&c) ^ (b&c);
+			int temp2 = S0 + maj;
+
+			h = g;
+			g = f;
+			f = e;
+			e = d + temp1;
+			d = c;
+			c = b;
+			b = a;
+			a = temp1 + temp2;
+		}
+		k[0] = k[0] + a;
+		k[1] = k[1] + b;
+		k[2] = k[2] + c;
+		k[3] = k[3] + d;
+		k[4] = k[4] + e;
+		k[5] = k[5] + f;
+		k[6] = k[6] + g;
+		k[7] = k[7] + h;
+	}
+
+	static int rightRotate(int bits, int k) {
+		return (bits >>> k) | (bits << (Integer.SIZE - k));
 	}
 
 }
