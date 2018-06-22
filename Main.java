@@ -116,13 +116,11 @@ class Main {
 			expand(block);
 			rotate(block,h);
 		}
-		char[] out = new char[32];
-		for(int i = 0; i < 8; i++) {
-			for(int j = 3; j >= 0; j--) {
-				out[i*4+j] = (char)((h[i]&(0xff<<(8*j)))>>>(8*j));
-			}
+		String result = "";
+		for(int i = 0; i < h.length; i++) {
+			result += String.format("%04x",h[i]);
 		}
-		return new String(out);
+		return new String(result);
 	}
 
 	static void expand(int[] w) {
