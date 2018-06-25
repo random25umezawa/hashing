@@ -118,15 +118,15 @@ class Main {
 		}
 		String result = "";
 		for(int i = 0; i < h.length; i++) {
-			result += String.format("%04x",h[i]);
+			result += String.format("%08x",h[i]);
 		}
 		return new String(result);
 	}
 
 	static void expand(int[] w) {
-		for(int i = 16; i < 63; i++) {
-			int s0 = rightRotate(w[i-15],7) ^ rightRotate(w[i-15],18) ^ rightRotate(w[i-15],3);
-			int s1 = rightRotate(w[i-2],17) ^ rightRotate(w[i-2],19) ^ rightRotate(w[i-2],10);
+		for(int i = 16; i < 64; i++) {
+			int s0 = rightRotate(w[i-15],7) ^ rightRotate(w[i-15],18) ^ (w[i-15]>>>3);
+			int s1 = rightRotate(w[i-2],17) ^ rightRotate(w[i-2],19) ^ (w[i-2]>>>10);
 			w[i] = w[i-16] + s0 + w[i-7] + s1;
 		}
 	}
