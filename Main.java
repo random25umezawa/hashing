@@ -50,29 +50,31 @@ class Main {
 		}
 		*/
 
+		System.out.printf("%08x %08x %08x %08x\n",0xff,rightRotate(0xff,1),rightRotate(0xff,8),rightRotate(0xff,12));
+
+		Scanner scan = new Scanner(System.in);
+
+		String in_str = "";
+		if(scan.hasNext()) in_str = scan.next();
+
+		char[] input = in_str.toCharArray();
+
+		List<Integer> arr = new ArrayList<Integer>();
+		for(int i = 0; i < input.length; i++) {
+			if(i%4==0) arr.add(0);
+			arr.set(i/4,arr.get(i/4)|(((int)input[i])<<(8*(3-i%4))));
+			System.out.printf("%d,%02x\n",(int)input[i],(int)input[i]);
+		}
+/*
 		List<Integer> arr = new ArrayList<Integer>(
 			Arrays.asList(
-				0x00001111,
-				0x22223333,
-				0x44445555,
-				0x66667777,
-				0x88889999,
-				0xaaaabbbb,
-				0xccccdddd,
-				0xeeeeffff,
-				0x00112233,
-				0x44556677/*,
-				0x00000000,
-				0x00000000,
-				0x00000000,
-				0x00000000
-				*/
+				0x31323334
 			)
 		);
+*/
+		padding(arr,input.length*8);
 
-		padding(arr,arr.size()*32);
-
-		//System.out.println(arr+" "+arr.size());
+		System.out.println(arr+" "+arr.size());
 
 		String hashed = hash(arr);
 
